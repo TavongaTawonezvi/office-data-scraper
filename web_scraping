@@ -1,7 +1,23 @@
 from bs4 import BeautifulSoup
+import requests
 
-with open("index.html", "r") as f:
-    doc = BeautifulSoup(f, "html.parser")
+#r = requests.get("https://www.businessinsider.com/the-office-fun-facts-2018-12").text
+with open("business_insider_office.html", "r") as f:
+    soup = BeautifulSoup(f, "html.parser")
 
-tags = doc.find_all("p")[1]
-print(tags.find_all("a"))
+    pGenerics =[]
+
+    for div in soup.select("div"):
+        for p in div.select("p"):
+            pGenerics.append(p.text)
+    pGenerics = list(set(pGenerics)) # get unique statements
+    for g in pGenerics:
+        print(g)
+    
+    with open("the_office.txt", "a") as mainFile:
+        for g in pGenerics:
+            mainFile.write(g + "\n")
+        print("appending heading statements complete")
+
+
+    
