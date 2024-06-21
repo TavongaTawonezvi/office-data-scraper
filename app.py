@@ -35,16 +35,16 @@ db_text.docstore.__dict__
 def retrieve_info(query):
     response = db_text.similarity_search(query, k=3)
     result = response[0].page_content
-    print(result)
+  #  print(result)
     return result
-query = "What script data can be relevant for creating a trivia game for the Office?"
+query = "What data can be relevant for creating a trivia game for the Office?"
 similar_data = retrieve_info(query)
 
 # Setup LLMChain and prompts
-llm = ChatOpenAI()
+llm = ChatOpenAI(model_name="gpt-3.5-turbo")
 
 template = """I am creating a trivia game for 'The Office' show and would like for you to provide me with question answer pairs for my app.
-The questions should be divided in three categories: Easy, Medium and Difficult. Here is some extra data that you can use to create te questions. 
+The questions should be divided in three categories: Easy, Medium and Difficult. Here is some extra info about the show that you can use to create te questions. 
 {similar_data} 
 This data is collected from the script of the show and some data from blog sites.
 
@@ -58,7 +58,7 @@ prompt = PromptTemplate(
 )
 
 chain = prompt | llm
-response = chain.invoke(similar_data)
+response = chain.invoke({query : similar_data})
 print(response)
 
 # Retrieval augmented generation
